@@ -1,0 +1,8 @@
+#input parameters
+MAXNODE = 3
+MAXAGE = 110
+AGE = 10
+YEARS = 100
+CALC_YEARS = 20
+EXPENSE_LOADING = 0.1
+GENDER = 'Male'
