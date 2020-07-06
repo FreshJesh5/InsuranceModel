@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import constants
+from logger import logCSV
 
 class EdgeType:
     value = 0
@@ -83,30 +84,33 @@ def calculateMarkov(nodenames, filenames):
         return round(pop[pop_counter][node_index]*(1-subsum)+addsum,6)
 
     #init our array for storing population
-    pop = np.zeros((min(YEARS, MAXAGE-AGE)+1,MAXNODE))
+    pop = np.zeros((min(YEARS, MAXAGE-AGE)+2,MAXNODE))
     #hardcoded, have to change later?
     pop[0] = [1.0,0,0]
 
     #init array for population_change
-    pop_change = np.zeros((MAXNODE,min(YEARS, MAXAGE-AGE), MAXNODE-1))
+    pop_change = np.zeros((MAXNODE,min(YEARS, MAXAGE-AGE)+1, MAXNODE-1))
 
-    for i in range(min(YEARS, MAXAGE-AGE)):
+    for i in range(min(YEARS, MAXAGE-AGE)+1):
         updatePop(i, pop, edges)
 
     #save pop to csv
     #savetxt('population-new.csv', pop, delimiter=',', fmt='%.3f')
-    pop_df = pd.DataFrame(pop, columns = HSD)
-    pop_df.insert(loc=0, column='Age', value=np.arange(AGE,min(AGE+YEARS,MAXAGE)+1))
-        # for later: pop_df.index = np.arange(AGE,min(AGE+YEARS,MAXAGE)+1)
-        # for later: pop_df.index.name='Agee'
+    pop_df = pd.DataFrame(pop[0:min(YEARS, MAXAGE-AGE)+1], columns = HSD)
+    # pop_df.insert(loc=0, column='Age', value=np.arange(AGE,min(AGE+YEARS,MAXAGE)+1))
+    pop_df.index = np.arange(AGE,min(AGE+YEARS,MAXAGE)+1)
+    pop_df.index.name='Age'
     pop_df.to_csv('./pop/population.csv', index=True, float_format='%.6f')
-
     #saving pop_change to csv
-    pop_change_df = pd.DataFrame()
+    pop_delta_df = pd.DataFrame()
     for i in range(MAXNODE):
         for j in range(MAXNODE-1):
-            pop_change_df[HSD[(i+j+1)%MAXNODE]+'->'+HSD[i]] = pd.Series(pop_change[i,:,j])
+            pop_delta_df[HSD[(i+j+1)%MAXNODE]+'->'+HSD[i]] = pd.Series(pop_change[i,:,j])
 
-    pop_change_df.insert(loc=0, column='Age', value=np.arange(AGE,min(AGE+YEARS,MAXAGE)))
-    pop_change_df.to_csv('./pop/population_delta.csv', index=False, float_format='%.6f')
-    return (pop_df, pop_change_df)
+    # pop_delta_df.insert(loc=0, column='Age', value=np.arange(AGE,min(AGE+YEARS,MAXAGE)))
+    pop_delta_df.index = np.arange(AGE,min(AGE+YEARS,MAXAGE)+1)
+    pop_delta_df.index.name='Age'
+    pop_delta_df.to_csv('./pop/population_delta.csv', index=True, float_format='%.6f')
+    logCSV("Population","./pop/population.csv")
+    logCSV("Population Delta","./pop/population_delta.csv")
+    return (pop_df, pop_delta_df)
