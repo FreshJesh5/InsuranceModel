@@ -23,7 +23,7 @@ def calculatePCF(PCF_df,pop_df):
 
     # export to csv
     #exp_premium.insert(loc=0, column='Age', value=np.arange(constants.AGE, index_cap))
-    exp_premium.to_csv('./cash_flow/exp_premium.csv', index=True, float_format='%.6f')
-    logCSV("Expected Premium","./cash_flow/exp_premium.csv")
-    
+    exp_premium.to_csv(constants.savepath + constants.expected_premium, index=True, float_format='%.6f')
+    logCSV("Expected Premium",constants.savepath + constants.expected_premium)
+
     return exp_premium

@@ -81,7 +81,7 @@ def calculateMarkov(nodenames, filenames):
             pop_change[node_index][pop_counter][i-1] = addsum_incr
             addsum += addsum_incr
         #final formula after calculating subsum and addsum
-        return round(pop[pop_counter][node_index]*(1-subsum)+addsum,6)
+        return pop[pop_counter][node_index]*(1-subsum)+addsum
 
     #init our array for storing population
     pop = np.zeros((min(YEARS, MAXAGE-AGE)+2,MAXNODE))
@@ -100,7 +100,7 @@ def calculateMarkov(nodenames, filenames):
     # pop_df.insert(loc=0, column='Age', value=np.arange(AGE,min(AGE+YEARS,MAXAGE)+1))
     pop_df.index = np.arange(AGE,min(AGE+YEARS,MAXAGE)+1)
     pop_df.index.name='Age'
-    pop_df.to_csv('./pop/population.csv', index=True, float_format='%.6f')
+    pop_df.to_csv(constants.savepath + constants.population, index=True, float_format='%.10f')
     #saving pop_change to csv
     pop_delta_df = pd.DataFrame()
     for i in range(MAXNODE):
@@ -110,7 +110,7 @@ def calculateMarkov(nodenames, filenames):
     # pop_delta_df.insert(loc=0, column='Age', value=np.arange(AGE,min(AGE+YEARS,MAXAGE)))
     pop_delta_df.index = np.arange(AGE,min(AGE+YEARS,MAXAGE)+1)
     pop_delta_df.index.name='Age'
-    pop_delta_df.to_csv('./pop/population_delta.csv', index=True, float_format='%.6f')
-    logCSV("Population","./pop/population.csv")
-    logCSV("Population Delta","./pop/population_delta.csv")
+    pop_delta_df.to_csv(constants.savepath + constants.population_delta, index=True, float_format='%.10f')
+    logCSV("Population",constants.savepath + constants.population)
+    logCSV("Population Delta",constants.savepath + constants.population_delta)
     return (pop_df, pop_delta_df)

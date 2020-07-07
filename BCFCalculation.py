@@ -26,11 +26,11 @@ def calculateBCF(BCFIdle_df, BCFDelta_df, pop_df, pop_delta_df):
 
     # export to csv
     #exp_benefit_idle.insert(loc=0, column='Age', value=np.arange(constants.AGE, index_cap+1))
-    exp_benefit_idle.to_csv('./cash_flow/exp_benefit_idle.csv', index=True, float_format='%.6f')
+    exp_benefit_idle.to_csv(constants.savepath + constants.expected_benefit_idle, index=True, float_format='%.6f')
     # exp_benefit_delta.insert(loc=0, column='Age', value=np.arange(constants.AGE,index_cap))
-    exp_benefit_delta.to_csv('./cash_flow/exp_benefit_delta.csv', index=True, float_format='%.6f')
+    exp_benefit_delta.to_csv(constants.savepath + constants.expected_benefit_delta, index=True, float_format='%.6f')
 
-    logCSV("Expected Benefit Idle","./cash_flow/exp_benefit_idle.csv")
-    logCSV("Expected Benefit Delta","./cash_flow/exp_benefit_delta.csv")
+    logCSV("Expected Benefit Idle", constants.savepath + constants.expected_benefit_idle)
+    logCSV("Expected Benefit Delta", constants.savepath + constants.expected_benefit_delta)
 
     return (exp_benefit_idle, exp_benefit_delta)
